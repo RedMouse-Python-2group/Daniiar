@@ -23,5 +23,4 @@ c = a.replace(month=1, day=1)
 print(c)
 b = (a-c)
 print(b)
-print("Problem#5")
-n = 123
+
