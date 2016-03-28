@@ -1,0 +1,9 @@
+{% block messages %}
+<div class="messages">
+    <ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li><!-- message idet s view--><!--https://docs.djangoproject.com/en/1.9/ref/contrib/messages/-->
+    {% endfor %}
+    </ul>
+</div>
+{% endblock messages%}
