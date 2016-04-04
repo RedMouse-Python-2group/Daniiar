@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block navbar %}
+    <ul class="nav navbar-nav navbar-right">
+
+          <li><a href="{% url 'posts:about' %}">About us</a></li>
+
+      </ul>
+{% endblock %}
+{% block head_title %}Login{% endblock head_title%}
+
+
+
+{% block content %}
+<div class="col-sm-6 col-sm-offset-3">
+<h1>Log in</h1>
+<form method="POST" action="" enctype="multipart/form-data">{% csrf_token %}
+{{form.as_p}}
+<p>If you don not have an account yet. <a href="{% url 'registration' %}">Create one Here</a></p>
+<input type="submit" class="btn btn-default" value=" log in">
+</form>
+    </div>
+{% endblock content %}

@@ -14,7 +14,7 @@
           {% if object.draft %}<h3 color="red">Staff only: Draft{%endif%}</h3>{% if object.publish > today %} <h3 color="red">Staff only: Future Post</h3>{%endif%}
         <h3><a href="{{object.get_absolute_url}}">{{object.title}}</a><br><br><small>{{object.publish}}</small></h3>
           <hr/>
-          {% if object.user.get_full_name%}<!-- Esli u user est imya-->
+          {% if object.user.get_full_name%}
           <p>
 
             Author: {{object.user.get_full_name}}
@@ -29,7 +29,7 @@
     </div>
         <hr/>
         </div>
-
+    <!--{% cycle "" "<div class='col-sm-12>'><hr/></div></div><div class='row'>"%}-->
     {% endfor %}
 <div class="pagination">
     <span class="step-links">

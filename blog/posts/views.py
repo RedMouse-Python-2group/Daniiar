@@ -10,52 +10,28 @@ from django.db.models import Q
 
 
 def post_create(request):
-    if not request.user.is_staff or not request.user.is_superuser:
-        raise Http404
+    # if not request.user.is_staff or not request.user.is_superuser:
+    #     raise Http404
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect("/")
     form = PostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         instance = form.save(commit=False)
         instance.user = request.user
         instance.save()
         # message success
-        messages.success(request, 'Successfully created')# Esli forma sazdana poyavitsya eto soobshenie<!--https://docs.djangoproject.com/en/1.9/ref/contrib/messages/-->
+        messages.success(request, 'Successfully created')
         return HttpResponseRedirect(instance.get_absolute_url())
-    context = {
-        "form": form,
-    }
-    return render(request, "blog/post_form.html", context)
-
-
-def post_update(request, slug=None):
-    if not request.user.is_staff or not request.user.is_superuser:
-        raise Http404
-    instance = get_object_or_404(Post, slug=slug)
-    form = PostForm(request.POST or None, request.FILES or None, instance=instance,)
-    if form.is_valid():
-        instance = form.save(commit=False)
-        instance.save()
-        #message success
-        messages.success(request, 'Successfully updated')
-        return HttpResponseRedirect(instance.get_absolute_url())
-    context = {
-        "title": instance.title,
-        "instance": instance,
-        "form": form,
-    }
-
-    return render(request, "blog/post_form.html", context)
-
-
-def post_delete(request, slug=None):
-    if not request.user.is_staff or not request.user.is_superuser:
-        raise Http404
-    instance = get_object_or_404(Post, slug=slug)
-    instance.delete()
-    messages.success(request, 'Successfully deleted')
-    return redirect("posts:list")
+    else:
+        context = {
+            "form": form,
+                }
+        return render(request, "blog/post_form.html", context)
 
 
 def post_detail(request, slug=None):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect("/")
     instance = get_object_or_404(Post, slug=slug)
     if instance.publish > timezone.now().date() or instance.draft:
         if not request.user.is_staff or not request.user.is_superuser:
@@ -70,6 +46,8 @@ def post_detail(request, slug=None):
 
 
 def post_list(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect("/")
     today = timezone.now().date()
     queryset_list = Post.objects.active().filter(category="list").order_by("-timestamp")
 
@@ -84,7 +62,7 @@ def post_list(request):
             Q(user__last_name__icontains=query)
 
         ).distinct()
-    paginator = Paginator(queryset_list, 2)# Show 10 posts per page
+    paginator = Paginator(queryset_list, 10)# Show 10 posts per page
     page_request_var = 'page'
     page = request.GET.get(page_request_var)
     try:
@@ -98,7 +76,7 @@ def post_list(request):
 
     context = {
         "object_list": queryset,
-
+        "title": "List",
         "page_request_var": page_request_var,
         "today": today,
 
@@ -107,6 +85,8 @@ def post_list(request):
 
 
 def post_useful(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect("/")
     today = timezone.now().date()
     queryset_list = Post.objects.active().filter(category="useful").order_by("-timestamp")
     if request.user.is_staff or request.user.is_superuser:
@@ -134,7 +114,7 @@ def post_useful(request):
 
     context = {
         "object_list": queryset,
-
+        "title": "List",
         "page_request_var": page_request_var,
         "today": today,
 
@@ -143,7 +123,8 @@ def post_useful(request):
 
 
 def post_events(request):
-
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect("/")
     today = timezone.now().date()
     queryset_list = Post.objects.active().filter(category="events").order_by("-timestamp")
 
@@ -172,7 +153,7 @@ def post_events(request):
 
     context = {
         "object_list": queryset,
-
+        "title": "List",
         "page_request_var": page_request_var,
         "today": today,
 
@@ -181,13 +162,15 @@ def post_events(request):
 
 
 def post_other(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect("/")
     today = timezone.now().date()
     queryset_list = Post.objects.active().filter(category="other").order_by("-timestamp")
 
     if request.user.is_staff or request.user.is_superuser:
         queryset_list = Post.objects.all().filter(category="other").order_by("-timestamp")
-    query = request.GET.get("q")# url
-    if query:  # Ishet to chto vvodit polsovatel filtruet po title, content, name
+    query = request.GET.get("q")
+    if query:
         queryset_list = queryset_list.filter(
             Q(title__icontains=query) |
             Q(content__icontains=query) |
@@ -196,7 +179,7 @@ def post_other(request):
 
         ).distinct()
     paginator = Paginator(queryset_list, 10)  # Show 10 posts per page
-    page_request_var = 'page'# url
+    page_request_var = 'page'
     page = request.GET.get(page_request_var)
     try:
         queryset = paginator.page(page)
@@ -209,12 +192,45 @@ def post_other(request):
 
     context = {
         "object_list": queryset,
-
+        "title": "List",
         "page_request_var": page_request_var,
         "today": today,
 
     }
     return render(request, "blog/post_other.html", context)
+
+
+def post_update(request, slug=None):
+    # if not request.user.is_staff or not request.user.is_superuser:
+    #     raise Http404
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect("/")
+    instance = get_object_or_404(Post, slug=slug)
+    form = PostForm(request.POST or None, request.FILES or None, instance=instance,)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.save()
+        #message success
+        messages.success(request, 'Successfully updated')
+        return HttpResponseRedirect(instance.get_absolute_url())
+    context = {
+        "title": instance.title,
+        "instance": instance,
+        "form": form,
+    }
+
+    return render(request, "blog/post_form.html", context)
+
+
+def post_delete(request, slug=None):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect("/")
+    # if not request.user.is_staff or not request.user.is_superuser:
+    #     raise Http404
+    instance = get_object_or_404(Post, slug=slug)
+    instance.delete()
+    messages.success(request, 'Successfully deleted')
+    return redirect("posts:list")
 
 
 def post_about_us(request):

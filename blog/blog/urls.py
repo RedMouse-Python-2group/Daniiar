@@ -17,12 +17,16 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-
+from user import views
 
 
 urlpatterns = [
+    url(r'^$', views.log_in, name="log_in"),
     url(r'^admin/', admin.site.urls),
     url(r'^posts/', include("posts.urls", namespace="posts")),
+    url(r'^register/', views.register_author, name="registration"),
+    url(r'^logout/', views.log_out, name="log_out"),
+    url(r'^profile/(?P<slug>[\w-]+)/$', views.profile, name="profile"),
     #url(r'^posts/$', "<appname>.views.<function_name>"),
     ]
 

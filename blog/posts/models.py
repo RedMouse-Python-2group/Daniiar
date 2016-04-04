@@ -17,7 +17,10 @@ class PostManager(models.Manager):
 def upload_location(instance, filename):
     return "%s/%s" % (instance.id, filename)
 
-categories = (("news", "news"), ("useful", "useful"), ("events", "events"), ("other", "other"))
+
+
+
+categories = (("list", "list"), ("useful", "useful"), ("events", "events"), ("other", "other"))
 
 class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
@@ -30,11 +33,11 @@ class Post(models.Model):
     height_field = models.IntegerField(default=0)
     width_field = models.IntegerField(default=0)
     content = models.TextField()
-    category = models.CharField(choices=categories, default="news", max_length=120)
+    category = models.CharField(choices=categories, default="list", max_length=120)
     draft = models.BooleanField(default=False)
-    publish = models.DateField(auto_now=False, auto_now_add=False)# auto_now Automatically set the field to now every time the object is saved.
-    updated = models.DateTimeField(auto_now=True, auto_now_add=False)# auto_now_add evry time the object is created
-    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)# https://docs.djangoproject.com/en/1.9/ref/models/fields/
+    publish = models.DateField(auto_now=False, auto_now_add=False)
+    updated = models.DateTimeField(auto_now=True, auto_now_add=False)
+    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
     objects = PostManager()
 
 
@@ -46,7 +49,7 @@ class Post(models.Model):
 
 
 def create_slug(instance, new_slug=None):
-    slug = slugify(instance.title)# sosdaet slug is title
+    slug = slugify(instance.title)
     if new_slug is not None:
         slug = new_slug
     qs = Post.objects.filter(slug=slug).order_by("-id")

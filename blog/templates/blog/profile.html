@@ -1,0 +1,30 @@
+{#{% block profile %}#}
+{#    {{ email }}#}
+{#    {{ first_name }}#}
+{#    {{ last_name }}#}
+{#{% endblock %}#}
+{% extends "base.html" %}
+{% load urlify %}
+
+{% block head_title %}{{ last_name }} , {{first_name}} | Profile {% endblock head_title%}
+
+
+{% block content %}
+<div class="col-sm-6 col-sm-offset-3">
+{% if avatar %}
+    <img src="{{ avatar.url }}"/>
+{% endif %}
+<h1>{{ first_name }}</h1> <br>
+<h1>{{ last_name }}</h1><br>
+
+<div class="row">
+<div class="col-sm-7 col-offset-1">
+
+    <h3>{{ email }}</h3><br>
+
+<hr/>
+
+</div>
+</div>
+</div>
+{% endblock content %}
