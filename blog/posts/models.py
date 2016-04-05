@@ -18,9 +18,8 @@ def upload_location(instance, filename):
     return "%s/%s" % (instance.id, filename)
 
 
-
-
 categories = (("list", "list"), ("useful", "useful"), ("events", "events"), ("other", "other"))
+
 
 class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
@@ -35,7 +34,7 @@ class Post(models.Model):
     content = models.TextField()
     category = models.CharField(choices=categories, default="list", max_length=120)
     draft = models.BooleanField(default=False)
-    publish = models.DateField(auto_now=False, auto_now_add=False)
+    publish = models.DateField(auto_now=False, auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
     objects = PostManager()

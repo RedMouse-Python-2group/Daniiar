@@ -17,7 +17,8 @@
             <img src="{{ object.image.url}}" class="img-responsive">
             {% endif %}
       <div class="caption">
-          {% if object.draft %}<h3 color="red">Staff only: Draft{%endif%}</h3>{% if object.publish > today %} <h3 color="red">Staff only: Future Post</h3>{%endif%}
+          {% if object.draft %}<h3 color="red">Staff only: Draft{%endif%}</h3>
+{#          {% if object.publish > today %} <h3 color="red">Staff only: Future Post</h3>{%endif%}#}
         <h3><a href="{{object.get_absolute_url}}">{{object.title}}</a><br><br><small>{{object.publish}}</small></h3>
           <hr/>
           {% if object.user.get_full_name%}
