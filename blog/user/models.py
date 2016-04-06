@@ -11,7 +11,7 @@ def upload_location_author(instance, filename):
 
 
 class Author(models.Model):
-    # user = models.ForeignKey(User) IN DRINKER
+   
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField(max_length=50)
@@ -27,8 +27,7 @@ class Author(models.Model):
 
     def get_absolute_url(self):
         return reverse("profile", kwargs={"slug": self.slug})
-    # def __str__(self):
-    #     return self.email
+    
 
 
 def create_slug(instance, new_slug=None):
@@ -47,6 +46,4 @@ def pre_save_author_receiver(sender, instance, *args, **kwargs):
         instance.slug = create_slug(instance)
 pre_save.connect(pre_save_author_receiver, sender=Author)
 
-# def create_member(sender, instance, **kwargs):
-#     member, new = Member.objects.get_or_create(user=instance)
-# post_save.connect(create_member, User) in Drinker
+
