@@ -10,8 +10,6 @@ from .models import Author
 
 
 def register_author(request):
-    # if request.user.is_staff or not request.user.is_superuser:
-    #     raise Http404
     if request.user.is_authenticated():
         return HttpResponseRedirect("/posts/")  # for now
     form = AuthorForm(request.POST or None, request.FILES or None)
@@ -43,14 +41,14 @@ def log_in(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                # Redirect to a success page.
+               
                 return HttpResponseRedirect("/posts/")
             else:
-                # Return a 'disabled account' error message
+               
                 return render(request, "blog/signup.html")
 
         else:
-            # Return an 'invalid login' error message.
+           
             return render(request, "blog/login.html")
     context = {
         'form': form
