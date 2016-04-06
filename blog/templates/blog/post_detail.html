@@ -25,10 +25,13 @@
 
 <hr/>
     <br>
-    {% if user.is_superuser or user.is_staff%}
+
+    {% if user.is_authenticated %}
+        {%  if user.get_full_name == instance.user.get_full_name %}
     <p><a href="{{instance.get_absolute_url}}edit" class="btn btn-primary" role="button">Edit post</a></p>
     <hr/>
     <p><a href="{{instance.get_absolute_url}}delete" class="btn btn-primary" role="button">Delete post</a></p>
+            {% endif %}
     {% endif %}
     <div class="fb-comments" data-href="{{request.build_absolute_uri}}" data-numposts="5"></div>
 </div>
